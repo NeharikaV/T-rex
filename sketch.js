@@ -6,7 +6,7 @@ var trex, trex_running, trex_collided;
 var ground, invisibleGround, groundImage;
 
 var cloudsGroup, cloudImage;
-var obstaclesGroup, obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6;
+var obstaclesGroup, obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6, jump, die, check;
 
 var score=0;
 
@@ -31,6 +31,10 @@ function preload(){
   
   gameOverImg = loadImage("gameOver.png");
   restartImg = loadImage("restart.png");
+  
+  die=loadSound("die.mp3");
+  check=loadSound("checkPoint.mp3");
+  jump=loadSound("jump.mp3");
 }
 
 function setup() {
@@ -79,6 +83,7 @@ function draw() {
   
     if(keyDown("space") && trex.y >= 159) {
       trex.velocityY = -12;
+      jump.play();
     }
   
     trex.velocityY = trex.velocityY + 0.8
@@ -93,7 +98,13 @@ function draw() {
   
     if(obstaclesGroup.isTouching(trex)){
         gameState = END;
+        die.play();
     }
+    
+    if(score%100===0&&score>0){
+      check.play(); 
+   }
+       
   }
   else if (gameState === END) {
     gameOver.visible = true;
@@ -116,6 +127,8 @@ function draw() {
       reset();
     }
   }
+  
+  
   
   
   drawSprites();
